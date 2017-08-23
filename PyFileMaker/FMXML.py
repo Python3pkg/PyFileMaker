@@ -17,63 +17,65 @@ from .FMError import *
 
 
 class FMXML:
-	"""Class defining a basic FMPro XML result."""
+    """Class defining a basic FMPro XML result."""
 
-	def doParseXMLData( self ):
-		
-		"""This function parses the XML output of FileMaker."""
+    def doParseXMLData(self):
 
-		parser = xml2obj.Xml2Obj()
-		# Not valid document comming from FMServer
-		if self.data[-6:] == '</COL>':
-			self.data += '</ROW></RESULTSET></FMPXMLRESULT>'
-		xobj = parser.ParseString( self.data )
+        """This function parses the XML output of FileMaker."""
 
-		try:
-			el = xobj.getElements( 'ERRORCODE')
-			if el:
-				self.errorcode = int( el[0].getData() )
-			else:
-				self.errorcode = int( xobj.getElements('error')[0].getAttribute('code') )
-		except:
-			FMErrorByNum( 954 )
+        parser = xml2obj.Xml2Obj()
+        # Not valid document comming from FMServer
+        if self.data[-6:] == '</COL>':
+            self.data += '</ROW></RESULTSET></FMPXMLRESULT>'
+        xobj = parser.ParseString(self.data)
 
-		if self.errorcode != 0:
-			FMErrorByNum( self.errorcode )
+        try:
+            el = xobj.getElements('ERRORCODE')
+            if el:
+                self.errorcode = int(el[0].getData())
+            else:
+                self.errorcode = int(xobj.getElements('error')[0].getAttribute('code'))
+        except:
+            FMErrorByNum(954)
 
-		return xobj
+        if self.errorcode != 0:
+            FMErrorByNum(self.errorcode)
 
-	def __getitem__( self, key ):		
-		"""Returns a specific element from the resultset."""
+        return xobj
 
-		return self.resultset[key]
+    def __getitem__(self, key):
+        """Returns a specific element from the resultset."""
 
-	def __repr__( self ):
-		return "<%s instance WITH LIST OF %s RECORDS (total-count is %d)>\n%s" % (str(self.__class__), len(self), int(self.database['total-count']), pformat( self.resultset))
-		#return "<%s instance with %s records>\n%s" % (str(self.__class__), len(self), pformat(self.resultset))
+        return self.resultset[key]
 
-	def __len__( self ):
-		"""Returns the length of the resultset. This is the same as the number
-		of records that were found."""
+    def __repr__(self):
+        return "<%s instance WITH LIST OF %s RECORDS (total-count is %d)>\n%s" % (
+        str(self.__class__), len(self), int(self.database['total-count']), pformat(self.resultset))
 
-		return len( self.resultset )
+    # return "<%s instance with %s records>\n%s" % (str(self.__class__), len(self), pformat(self.resultset))
 
-	def doGetXMLElement( self, dom, elementName ):		
-		"""Get a single element from a DOM element."""
+    def __len__(self):
+        """Returns the length of the resultset. This is the same as the number
+        of records that were found."""
 
-		return dom.getElements( elementName )[0]
+        return len(self.resultset)
 
-	def doGetXMLElements( self, dom, elementName ):		
-		"""Get a list of elements from a DOM element."""
+    def doGetXMLElement(self, dom, elementName):
+        """Get a single element from a DOM element."""
 
-		return dom.getElements( elementName )
+        return dom.getElements(elementName)[0]
 
-	def doGetXMLAttribute( self, dom, attribute ):
-		"""Get a list of elements from a DOM element."""
+    def doGetXMLElements(self, dom, elementName):
+        """Get a list of elements from a DOM element."""
 
-		return dom.getAttribute( attribute )
+        return dom.getElements(elementName)
 
-	def doGetXMLAttributes( self, dom ):
-		"""Get a list of attributes from a DOM element."""
+    def doGetXMLAttribute(self, dom, attribute):
+        """Get a list of elements from a DOM element."""
 
-		return dom.attributes
+        return dom.getAttribute(attribute)
+
+    def doGetXMLAttributes(self, dom):
+        """Get a list of attributes from a DOM element."""
+
+        return dom.attributes

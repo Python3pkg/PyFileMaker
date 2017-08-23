@@ -13,11 +13,11 @@ import sys
 
 # Try to import the expat library
 try:
-	from xml.parsers import expat
+    from xml.parsers import expat
 except:
-	print("Unable to load the EXPAT library. You need to have it installed")
-	print("before you can use pyFileMaker.")
-	sys.exit()
+    print("Unable to load the EXPAT library. You need to have it installed")
+    print("before you can use pyFileMaker.")
+    sys.exit()
 
 # Import the FileMaker core modules
 from .FMServer import *
